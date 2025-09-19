@@ -140,4 +140,72 @@
         }
     </script>
 </body>
+</html><!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcar Ubicación en Mapa</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        crossorigin=""/>
+    <style>
+        #map { height: 400px; width: 100%; }
+        body { font-family: sans-serif; text-align: center; padding: 20px; }
+        .info { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <h2>Marque la ubicación del lugar</h2>
+    <p class="info">Haga clic en el mapa para mover el marcador. Luego, haga clic en el botón.</p>
+
+    <div id="map"></div>
+    <br>
+    <button onclick="enviarCoordenadas()">Continuar al formulario</button>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        crossorigin=""></script>
+    <script>
+        // Coordenadas de inicio (Asunción, Paraguay).
+        var latitudInicial = -25.2637;
+        var longitudInicial = -57.5759;
+
+        // Inicializar el mapa
+        var map = L.map('map').setView([latitudInicial, longitudInicial], 13);
+
+        // Añadir una capa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Crear un marcador que el usuario puede arrastrar
+        var marcador = L.marker([latitudInicial, longitudInicial], { draggable: true }).addTo(map);
+
+        // Capturar las coordenadas cuando el usuario arrastra el marcador
+        marcador.on('dragend', function(e) {
+            marcador.setLatLng(e.target.getLatLng());
+        });
+
+        // Capturar las coordenadas cuando el usuario hace clic en el mapa
+        map.on('click', function(e) {
+            marcador.setLatLng(e.latlng);
+        });
+
+        function enviarCoordenadas() {
+            var coords = marcador.getLatLng();
+            var lat = coords.lat;
+            var lng = coords.lng;
+
+            // Reemplaza los IDs de tu formulario y campos
+            var formURL = 'https://docs.google.com/forms/d/e/1FAIpQLSdt9_ak9Oizocio5OvKSB5SOEpeLVYzlI6G3CMQ63V25uHQSg/viewform?usp=pp_url';
+            var campoLatitud = '&entry.1376456382=' + lat;
+            var campoLongitud = '&entry.1262738835=' + lng;
+
+            var urlCompleta = formURL + campoLatitud + campoLongitud;
+            
+            // Redirigir a la URL pre-llenada
+            window.location.href = urlCompleta;
+        }
+    </script>
+</body>
 </html>
